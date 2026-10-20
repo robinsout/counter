@@ -1,0 +1,24 @@
+{
+  "projects": [
+    {
+      "id": "quadern",
+      "name": "Quadern de català",
+      "origins": ["https://robinsout.github.io"],
+      "events": {
+        "view": { "page": "id", "lang": ["ru", "en", "es"] },
+        "chapter": { "lesson": "id", "chapter": "id", "lang": ["ru", "en", "es"] },
+        "exercise": { "lesson": "id", "exercise": "id", "score": "int", "total": "int", "lang": ["ru", "en", "es"] },
+        "audio": { "lesson": "id", "lang": ["ru", "en", "es"] },
+        "sync": { "lang": ["ru", "en", "es"] }
+      },
+      "panels": [
+        { "type": "pivot", "title": "Просмотры: страница × язык", "event": "view", "rows": "page", "cols": "lang" },
+        { "type": "pivot", "title": "Читатели: страница × язык", "event": "view", "rows": "page", "cols": "lang", "measure": "visitors" },
+        { "type": "top", "title": "Дочитанные главы", "event": "chapter", "props": ["lesson", "chapter"], "measure": "visitors" },
+        { "type": "score", "title": "Упражнения", "event": "exercise", "rows": ["lesson", "exercise"], "score": "score", "total": "total" },
+        { "type": "top", "title": "Слушали озвучку", "event": "audio", "props": ["lesson"], "measure": "visitors" },
+        { "type": "top", "title": "Включили синхронизацию", "event": "sync", "props": ["lang"], "measure": "visitors" }
+      ]
+    }
+  ]
+}

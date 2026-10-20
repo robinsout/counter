@@ -1,0 +1,22 @@
+{
+  "name": "counter",
+  "private": true,
+  "type": "module",
+  "description": "Cookieless self-hosted visit counter for several projects",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test",
+    "start": "node src/main.ts",
+    "deploy": "bash scripts/deploy.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "happy-dom": "^20.14.6",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,64 @@
+[Unit]
+Description=robinsout counter: cookieless visit counter
+Documentation=https://github.com/robinsout/counter/blob/master/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Node 24 of the same machine (/opt/node/sync-current, kept up to date by crema-catalana deploy/install.sh)
+ExecStart=/opt/node/sync-current/bin/node /opt/counter/src/main.ts
+Environment=PORT=8788 HOST=127.0.0.1 NODE_ENV=production
+# STATS_SECRET (shared with the Caddy route of /stats); root-only file made by deploy/install.sh
+EnvironmentFile=/etc/counter/env
+# limits: events per address and in total, body size, database size; raw events are kept KEEP_DAYS
+Environment=RATE_PER_MINUTE=300 TOTAL_PER_MINUTE=3000 MAX_BODY_BYTES=4096 MAX_DB_MB=256 KEEP_DAYS=90
+# the database lives in /var/lib/counter (STATE_DIRECTORY)
+StateDirectory=counter
+StateDirectoryMode=0700
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=10
+SyslogIdentifier=counter
+
+# under memory pressure the counter goes first, not the sync server or Caddy; no core dumps (the daily salt
+# and addresses must not land on disk)
+MemoryMax=256M
+MemorySwapMax=0
+OOMScoreAdjust=500
+TasksMax=64
+LimitCORE=0
+
+# sandbox: a throwaway unprivileged user, read-only system, writes only to its state directory
+DynamicUser=yes
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RemoveIPC=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+IPAddressDeny=any
+IPAddressAllow=localhost
+
+[Install]
+WantedBy=multi-user.target

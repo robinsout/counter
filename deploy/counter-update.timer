@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly: restart the counter on a new Node patch (after quadern-sync-update.timer has installed it)
+
+[Timer]
+OnCalendar=Sun *-*-* 04:10:00 UTC
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

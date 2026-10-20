@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart the counter when the machine's Node 24 got a new patch
+Documentation=https://github.com/robinsout/counter/blob/master/README.md
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/counter/deploy/install.sh --restart-if-node-changed

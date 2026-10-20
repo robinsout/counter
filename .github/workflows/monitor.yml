@@ -1,0 +1,23 @@
+name: Counter monitor
+
+# Daily: the counter answers, and /stats refuses without a password (catches a broken proxy route).
+# A failed run sends the usual GitHub e-mail.
+on:
+  schedule:
+    - cron: '27 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health
+        run: curl -fsS --max-time 20 https://188.245.182.47/c/health
+      - name: The stats page is closed without a password
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://188.245.182.47/stats/)
+          echo "GET /stats/ without a password: $code"
+          test "$code" = 401
