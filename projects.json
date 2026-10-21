@@ -19,6 +19,23 @@
         { "type": "top", "title": "Слушали озвучку", "event": "audio", "props": ["lesson"], "measure": "visitors" },
         { "type": "top", "title": "Включили синхронизацию", "event": "sync", "props": ["lang"], "measure": "visitors" }
       ]
+    },
+    {
+      "id": "puntillo",
+      "name": "Puntillo",
+      "origins": ["https://robinsout.github.io"],
+      "events": {
+        "view": { "page": ["trainer", "progress", "settings", "wiki", "wiki-article"], "topic": ["treble-staff", "durations", "accidentals", "key-signatures", "keys", "piano-keyboard", "unknown"], "lang": ["en", "ru", "es"] },
+        "session": { "exercise": ["read", "write"], "preset": ["first-steps", "confident-reading", "advanced", "custom"] },
+        "summary": { "exercise": ["read", "write"], "score": "int", "total": "int" }
+      },
+      "panels": [
+        { "type": "pivot", "title": "Просмотры: экран × язык", "event": "view", "rows": "page", "cols": "lang" },
+        { "type": "pivot", "title": "Посетители: экран × язык", "event": "view", "rows": "page", "cols": "lang", "measure": "visitors" },
+        { "type": "top", "title": "Статьи вики", "event": "view", "props": ["topic"], "measure": "visitors" },
+        { "type": "pivot", "title": "Сессии: упражнение × пресет", "event": "session", "rows": "exercise", "cols": "preset" },
+        { "type": "score", "title": "Итоги сессий", "event": "summary", "rows": ["exercise"], "score": "score", "total": "total" }
+      ]
     }
   ]
 }
