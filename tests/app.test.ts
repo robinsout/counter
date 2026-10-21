@@ -168,9 +168,30 @@ test('the stats page needs the secret from the proxy; without a configured secre
   assert.equal((await get('/stats/', { secret: 'wrong' })).status, 403);
   assert.equal((await get('/stats/', { secret: SECRET.slice(1) + 'x' })).status, 403);
   assert.equal((await get('/stats/')).status, 200);
-  for (const o of [{ statsSecret: undefined }, { statsSecret: '' }, { statsSecret: 'short' }, { passwordSha256: undefined }, { passwordSha256: 'not-a-hash' }]) {
+  for (const o of [{ statsSecret: undefined }, { statsSecret: '' }, { statsSecret: 'short' }]) {
     handle = make(o);
     assert.equal((await get('/stats/', { secret: o.statsSecret ?? SECRET })).status, 403, JSON.stringify(o));
+  }
+  for (const o of [{ passwordSha256: undefined }, { passwordSha256: 'not-a-hash' }]) {
+    handle = make(o);
+    assert.equal((await get('/stats/')).status, 503, JSON.stringify(o));
+    assert.equal((await get('/stats/', { secret: null })).status, 403, JSON.stringify(o));
+  }
+});
+
+test('without a configured password the owner (behind the proxy) is told how to set it, and nobody else is told anything', async () => {
+  handle = make({ passwordSha256: undefined });
+  const res = await get('/stats/', { auth: null });
+  assert.equal(res.status, 503);
+  assert.equal(res.headers.get('www-authenticate'), null, 'no password prompt that cannot succeed');
+  assert.match(res.headers.get('content-type') ?? '', /^text\/html; charset=utf-8$/);
+  assert.match(res.headers.get('content-security-policy') ?? '', /default-src 'none'/);
+  const html = await res.text();
+  assert.match(html, /Пароль статистики ещё не задан/);
+  assert.match(html, /ssh -t hetzner bash \/opt\/counter\/deploy\/install\.sh --new-password/);
+  for (const r of [await get('/stats/', { secret: null }), await get('/stats/', { secret: 'wrong' }), await get('/stats/', { site: 'cross-site' })]) {
+    assert.equal(r.status, 403);
+    assert.doesNotMatch(await r.text(), /парол|install/i);
   }
 });
 

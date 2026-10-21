@@ -12,7 +12,7 @@ import { comboKey, type SqliteStore } from './store.ts';
 import { FailureCounter, RateLimiter } from './ratelimit.ts';
 import { addDays, DailySalt, localDayHour, visitorId } from './time.ts';
 import { buildReport } from './stats.ts';
-import { PERIODS, renderPage } from './page.ts';
+import { PERIODS, renderNoPassword, renderPage } from './page.ts';
 
 export interface HandlerOptions {
   registry: Registry;
@@ -151,10 +151,12 @@ export function createHandler({
     }
 
     if (url.pathname === '/stats/') {
-      if (!sameSecret(request.headers.get('x-counter-stats'), statsSecret) || !expected) return json(403, { error: 'forbidden' });
+      if (!sameSecret(request.headers.get('x-counter-stats'), statsSecret)) return json(403, { error: 'forbidden' });
       // another site must not make the owner's browser (which keeps the password) load the page
       const site = request.headers.get('sec-fetch-site');
       if (site !== null && site !== 'none' && site !== 'same-origin') return json(403, { error: 'forbidden' });
+      // past the proxy's secret: tell the owner how to set the password; the page stays closed
+      if (!expected) return new Response(renderNoPassword(), { status: 503, headers: PAGE_HEADERS });
       const password = basicPassword(request.headers.get('authorization'));
       const right = password !== null && equal(createHash('sha256').update(password).digest(), expected);
       if (!right) {

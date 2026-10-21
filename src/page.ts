@@ -89,3 +89,12 @@ ${report.panels.map(panel).join('\n')}
 <footer>Без cookies и без IP-адресов: посетитель узнаётся только в пределах одного дня. Сегодня — ${esc(o.today)}, время барселонское.</footer>
 </main></body></html>`;
 }
+
+export function renderNoPassword(): string {
+  return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Статистика</title><style>${STYLE}</style></head><body><main>
+<h1>Статистика</h1>
+<section><p>Пароль статистики ещё не задан:</p><p><code>ssh -t hetzner bash /opt/counter/deploy/install.sh --new-password</code></p>
+<p class="muted">Пароль покажется один раз; потом обновите эту страницу.</p></section>
+</main></body></html>`;
+}
