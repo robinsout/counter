@@ -23,7 +23,7 @@
     {
       "id": "puntillo",
       "name": "Puntillo",
-      "origins": ["https://robinsout.github.io"],
+      "origins": ["https://puntillo.makeitforfun.es"],
       "events": {
         "view": { "page": ["trainer", "progress", "settings", "wiki", "wiki-article"], "topic": ["treble-staff", "durations", "accidentals", "key-signatures", "keys", "piano-keyboard", "unknown"], "lang": ["en", "ru", "es"] },
         "session": { "exercise": ["read", "write"], "preset": ["first-steps", "confident-reading", "advanced", "custom"] },
