@@ -3,7 +3,7 @@
     {
       "id": "quadern",
       "name": "Quadern de català",
-      "origins": ["https://robinsout.github.io"],
+      "origins": ["https://crema-catalana.makeitforfun.es", "https://robinsout.github.io"],
       "events": {
         "view": { "page": "id", "lang": ["ru", "en", "es"] },
         "chapter": { "lesson": "id", "chapter": "id", "lang": ["ru", "en", "es"] },

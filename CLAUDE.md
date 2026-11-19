@@ -6,6 +6,6 @@ Cookieless self-hosted visit counter for robinsout projects. Read README.md firs
 - TDD: a failing test in `tests/` first, then the code. `npm run check` = types + tests.
 - Privacy rules are part of the contract and tested: no IP addresses, no browser strings, no full URLs stored; the daily salt only in memory; only schema fields (`projects.json`) get in.
 - `/stats` has two locks (secret header from the Caddy route + password with a failure limit); never weaken either. Secrets live only in `/etc/counter/env` on the server, never in the repo, logs or chat.
-- The client (`client/counter.ts`) is copied into each project, never served from the server (shared origin robinsout.github.io).
+- The client (`client/counter.ts`) is copied into each project, never served from the server (the old shared origin robinsout.github.io; quadern has its own domain crema-catalana.makeitforfun.es, the old origin stays in projects.json temporarily).
 - Deploy: `npm run deploy` (ssh host `hetzner`). The machine's Caddy and Node come from robinsout/crema-catalana `deploy/`.
-- Commits from robinsout@gmail.com with the personal key (set in this repo's local git config).
+- Commits from the personal noreply address 15253414+robinsout@users.noreply.github.com (GitHub rejects pushes that reveal the e-mail) with the personal key (set in this repo's local git config).
